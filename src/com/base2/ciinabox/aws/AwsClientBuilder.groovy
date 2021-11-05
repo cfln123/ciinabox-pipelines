@@ -17,7 +17,7 @@ import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
 import com.amazonaws.services.ecs.AmazonECSClientBuilder
 import com.amazonaws.services.redshift.AmazonRedshiftClientBuilder
 import com.amazonaws.services.rds.AmazonRDSClientBuilder
-import com.amazonaws.services.codeartifact.AWSCodeArtifactClientBuilder
+//import com.amazonaws.services.codeartifact.AWSCodeArtifactClientBuilder
 
 class AwsClientBuilder implements Serializable {
   
@@ -133,22 +133,23 @@ class AwsClientBuilder implements Serializable {
     return cb.build()
   }
 
-  def codeartifact() {
-    def cb = new AWSCodeArtifactClientBuilder().standard()
-      .withClientConfiguration(config())
+  // def codeartifact() {
+  //   def cb = new AWSCodeArtifactClientBuilder().standard()
+  //     .withClientConfiguration(config())
 
-    if (region) {
-      cb.withRegion(region)
-    }
+  //   if (region) {
+  //     cb.withRegion(region)
+  //   }
 
-    def creds = getCredentials()
-    if(creds != null) {
-      cb.withCredentials(new AWSStaticCredentialsProvider(creds))
-    }
+  //   def creds = getCredentials()
+  //   if(creds != null) {
+  //     cb.withCredentials(new AWSStaticCredentialsProvider(creds))
+  //   }
 
-    return cb.build()
-  }
+  //   return cb.build()
+  // }
   
+
   private def config() {
     def clientConfiguration = new ClientConfiguration()
       .withRetryPolicy(new RetryPolicy(
