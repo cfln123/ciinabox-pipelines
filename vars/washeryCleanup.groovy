@@ -18,8 +18,6 @@ washeryCleanup(
 //import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
 import com.base2.ciinabox.aws.AwsClientBuilder
 
-def filterSnapshotsBy()
-
 def call(body) {
   def config = body
 
