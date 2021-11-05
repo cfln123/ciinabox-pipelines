@@ -20,7 +20,7 @@ def call(body) {
   def response  = client.describeDBClusterSnapshotAttributes(request)
   def snapshots = response.getDBClusterSnapshots()
 
-  for (snapshot : snapshots) {
+  for (snapshot in snapshots) {
     println snapshot.toString()
     println snapshot.getDBClusterSnapshotArn()
   }
