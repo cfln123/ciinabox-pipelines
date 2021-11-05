@@ -29,9 +29,9 @@ def call(body) {
 
   def client  = clientBuilder.rds()
   def request = new DescribeDBClusterSnapshotsRequest()
-    .withDBInstanceIdentifier('carbon-dev-db-alaowgx15ood-dbcluster-1gwzozkft4ovq')
+    .withDBInstanceIdentifier("")
 
-  request.setSnapshotType('manual')
+  request.setSnapshotType("manual")
 
   def snapshotsResult = client.describeDBClusterSnapshots(request)
   def snapshots       = snapshotsResult.getDBClusterSnapshots()
