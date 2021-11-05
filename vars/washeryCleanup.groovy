@@ -28,11 +28,12 @@ def call(body) {
   ])
 
   def client  = clientBuilder.rds()
-  def request = new DescribeDBClusterSnapshotsRequest()
+  //def request = new DescribeDBClusterSnapshotsRequest()
 
-  request.setSnapshotType('manual')
+  //request.setSnapshotType('manual')
 
-  def snapshotsResult = client.describeDBClusterSnapshots(request)
+  //def snapshotsResult = client.describeDBClusterSnapshots(request)
+  def snapshotsResult = client.describeDBClusterSnapshots()
   def snapshots       = snapshotsResult.getDBClusterSnapshots()
 
   for (snapshot in snapshots) {
