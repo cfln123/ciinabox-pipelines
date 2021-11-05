@@ -6,6 +6,7 @@ example usage
 washeryCleanup(
     region: 'ap-southeast-2', // (required)
     awsAccountId: '00000000000', // (required)
+    role: 'role-name', // (required)
     prefix: 'washery-scrubbed', // (optional, snaphot name's prefix to filter)
     keepVersions: 5, // (conditional, required if keepDays is not set, keep last N snapshots)
     keepDays: 7 // (optional, required if keepVersions is not set, keep snapshots from last N days)
