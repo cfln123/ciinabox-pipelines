@@ -28,7 +28,7 @@ def call(body) {
   ])
 
   def client    = clientBuilder.rds()
-  def request   = new DescribeDBClusterSnapshotsRequest().withSnapshotType('manual')
+  def request   = new DescribeDBClusterSnapshotsRequest().withDBClusterSnapshotIdentifier('').withSnapshotType('manual')
   def response  = client.describeDBClusterSnapshotAttributes(request)
   def snapshots = response.getDBClusterSnapshots()
 
