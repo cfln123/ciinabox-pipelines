@@ -15,7 +15,7 @@ washeryCleanup(
 )
 ************************************/
 
-import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotAttributesRequest
+import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
 import com.base2.ciinabox.aws.AwsClientBuilder
 
 def call(body) {
@@ -28,7 +28,7 @@ def call(body) {
   ])
 
   def client    = clientBuilder.rds()
-  def request   = new DescribeDBClusterSnapshotAttributesRequest().withSnapshotType('manual')
+  def request   = new DescribeDBClusterSnapshotsRequest().withSnapshotType('manual')
   def response  = client.describeDBClusterSnapshotAttributes(request)
   def snapshots = response.getDBClusterSnapshots()
 
