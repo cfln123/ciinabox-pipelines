@@ -46,7 +46,7 @@ def call(body) {
   def snapshots       = snapshotsResult.getDBClusterSnapshots()
 
   for (snapshot in snapshots) {
-    if (snapshot.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix)) {
+    if (snapshot.SnapshotType == 'manual' && snapshot.DBClusterSnapshotIdentifier.startsWith(prefix)) {
       println snapshot.toString()
       println snapshot.getDBClusterSnapshotArn()
     }
