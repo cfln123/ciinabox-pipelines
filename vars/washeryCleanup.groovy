@@ -7,7 +7,7 @@ washery DSL
 example usage
 washeryCleanup(
     region: 'ap-southeast-2', // (required)
-    awsAccountId: '00000000000', // (required)
+    accountId: '00000000000', // (required)
     role: 'role-name', // (required)
     prefix: 'washery-scrubbed', // (optional, snaphot name's prefix to filter)
     keepVersions: 5, // (conditional, required if keepDays is not set, keep last N snapshots)
@@ -19,7 +19,14 @@ import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotAttributesReq
 
 
 def call(body) {
-  def config    = body
+  def config = body
+
+  def clientBuilder = new AwsClientBuilder([
+    region: config.region,
+    awsAccountId: config.get('accountId', null),
+    role: config.get('role', null)
+  ])
+
   def client    = clientBuilder.rds()
   def request   = new DescribeDBClusterSnapshotAttributesRequest().withSnapshotType('manual')
   def response  = client.describeDBClusterSnapshotAttributes(request)
