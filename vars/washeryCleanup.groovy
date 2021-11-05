@@ -1,3 +1,5 @@
+package com.base2.ciinabox
+
 /************************************
 washery DSL
 
@@ -12,6 +14,9 @@ washeryCleanup(
     keepDays: 7 // (optional, required if keepVersions is not set, keep snapshots from last N days)
 )
 ************************************/
+
+import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotAttributesRequest
+
 
 def call(body) {
   def config    = body
