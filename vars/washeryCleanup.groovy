@@ -28,12 +28,12 @@ def call(body) {
   ])
 
   def client  = clientBuilder.rds()
-  //def request = new DescribeDBClusterSnapshotsRequest()
+  def request = new DescribeDBClusterSnapshotsRequest()
+    .withDBInstanceIdentifier('carbon-dev-db-alaowgx15ood-dbcluster-1gwzozkft4ovq')
 
-  //request.setSnapshotType('manual')
+  request.setSnapshotType('manual')
 
-  //def snapshotsResult = client.describeDBClusterSnapshots(request)
-  def snapshotsResult = client.describeDBClusterSnapshots()
+  def snapshotsResult = client.describeDBClusterSnapshots(request)
   def snapshots       = snapshotsResult.getDBClusterSnapshots()
 
   for (snapshot in snapshots) {
