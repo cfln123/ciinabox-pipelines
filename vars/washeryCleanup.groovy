@@ -20,6 +20,7 @@ import com.base2.ciinabox.aws.AwsClientBuilder
 
 def call(body) {
   def config = body
+  def prefix = config.get('prefix', 'washery-scrubbed')
 
   def clientBuilder = new AwsClientBuilder([
     region: config.region,
@@ -45,7 +46,7 @@ def call(body) {
   def snapshots       = snapshotsResult.getDBClusterSnapshots()
 
   for (snapshot in snapshots) {
-    if (snapshot.getSnapshotType() == 'manual') {
+    if (snapshot.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix)) {
       println snapshot.toString()
       println snapshot.getDBClusterSnapshotArn()
     }
