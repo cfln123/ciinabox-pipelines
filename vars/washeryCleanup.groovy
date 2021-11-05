@@ -35,7 +35,7 @@ def call(body) {
     For unknown reasons (probably the version of the java-sdk since it couldnt find the codeartifact class is not implemented)
     we cant manage to make the DescribeDBClusterSnapshotsRequest work to filter the snapshots by type, doing it manully for now
   */
-  
+
   //def request = new DescribeDBClusterSnapshotsRequest()
     //.withDBClusterIdentifier("carbon-dev-db-alaowgx15ood-dbcluster-1gwzozkft4ovq")
     //.withDBClusterIdentifier("")
@@ -46,7 +46,7 @@ def call(body) {
   def snapshotsResult = client.describeDBClusterSnapshots()
   def snapshots       = snapshotsResult.getDBClusterSnapshots()
     .stream()
-    .filter(s -> s.getSnapshotType() == "manual")
+    .filter(s -> s.getSnapshotType() == 'manual')
     .collect(Collectors.toList())
 
   for (snapshot in snapshots) {
