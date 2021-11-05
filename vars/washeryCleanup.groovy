@@ -45,13 +45,12 @@ def call(body) {
   // def snapshotsResult = client.describeDBClusterSnapshots(request)
   def snapshotsResult = client.describeDBClusterSnapshots()
   def snapshots       = snapshotsResult.getDBClusterSnapshots()
-    .stream()
-    .filter(s -> s.getSnapshotType() == 'manual')
-    .collect(Collectors.toList())
 
   for (snapshot in snapshots) {
-    println snapshot.toString()
-    println snapshot.getDBClusterSnapshotArn()
+    if (snapshot.getSnapshotType() == 'manual')) {
+      println snapshot.toString()
+      println snapshot.getDBClusterSnapshotArn()
+    }
   }
 }
 
