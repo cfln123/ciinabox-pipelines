@@ -15,12 +15,80 @@ washeryCleanup(
 )
 ************************************/
 
+/*
+
+TODO:
+  Add dry run feature
+  Fix getExpireDate function
+  Do actual snapshot deletion
+
+*/
+
+import java.util.Date
+import java.lang.Exception
+import java.util.function
+
+import com.amazonaws.services.rds.model.DBClusterSnapshot
+
 //import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
 import com.base2.ciinabox.aws.AwsClientBuilder
 
+def getExpireDate(days) {
+  return new Date().now().getTime() + (86400 * days) // Arrumar
+}
+
+def filterAndSortSnapshots(snapshots) {
+  def results = FluentIterable.from(snapshots).filter(new Predicate<DBClusterSnapshot>() {
+    @Override
+    public boolean apply(DBClusterSnapshot input) {
+      return snapshot.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix)
+    }
+    }).toSortedList(new Comparator<DBClusterSnapshot>() {
+      @Override
+      public int compare(DBClusterSnapshot s1, DBClusterSnapshot s2) {
+        return s1.getSnapshotCreateTime().compareTo(s2.getSnapshotCreateTime());
+      }
+    });
+}
+
+def clearOlderSnapshots(snapshots, versions) {
+  def count = 0
+
+  for (def i = 0; i < versions; i++) {
+    def snapshot = snapshots.get(i)
+    println snapshot.toString()
+    println 'Clearing snapshot: ' + snapshot.getDBClusterSnapshotArn()
+
+    count++
+  }
+
+  return count
+}
+
+def clearExpiredSnapshots(snapshots, expireDate) {
+  def count = 0
+
+  for (def i = 0; i < snapshots.size(); i++) {
+    def snapshot = snapshots.get(i)
+
+    if (snapshot.getSnapshotCreateTime().getTime() > expireDate()) {
+      return count
+    }
+
+    println snapshot.toString()
+    println 'Clearing snapshot: ' + snapshot.getDBClusterSnapshotArn()
+    
+    count++
+  }
+
+  return count
+}
+
 def call(body) {
-  def config = body
-  def prefix = config.get('prefix', 'washery-scrubbed')
+  def config     = body
+  def prefix     = config.get('prefix', 'washery-scrubbed')
+  def versions   = config.get('keepVersions', 0)
+  def days       = config.get('keepDays', 0)
 
   def clientBuilder = new AwsClientBuilder([
     region: config.region,
@@ -44,12 +112,20 @@ def call(body) {
   // def snapshotsResult = client.describeDBClusterSnapshots(request)
   def snapshotsResult = client.describeDBClusterSnapshots()
   def snapshots       = snapshotsResult.getDBClusterSnapshots()
+  def deletedCount    = 0
+  
+  if (versions > 0) {
+    deletedCount = versions - snapshots.size()
+    clearOlderSnapshots(snapshots, deletedCount)
+  } else if (days > 0) {
+    def expireDate = getExpireDate(days)
+    deletedCount   = clearExpiredSnapshots(snaphots, expireDate)
+  } else {
+    throw new Exception('Either keepVersions or keepDays must be set, as a valid integer and greater than 0')
+  }
 
-  for (snapshot in snapshots) {
-    if (snapshot.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix)) {
-      println snapshot.toString()
-      println snapshot.getDBClusterSnapshotArn()
-    }
+  if (deletedCount == 0) {
+    println 'SKIPPED: Not enough version'
   }
 }
 
