@@ -42,7 +42,7 @@ def _sort(s1, s2) {
 def _filter(s) {
   return 
 }
-def filterAndSortSnapshots(snapshots) {
+def filterAndSortSnapshots(snapshots, prefix) {
   return snapshots.stream()
     .filter({ s -> s.getSnapshotType() == 'manual' && s.getDBClusterSnapshotIdentifier().startsWith(prefix) })
     .sorted({ s1, s2 -> s1.getSnapshotCreateTime().compareTo(s2.getSnapshotCreateTime()) })
@@ -120,7 +120,7 @@ def call(body) {
   */
 
   def snapshotsResult = client.describeDBClusterSnapshots()
-  def snapshots       = filterAndSortSnapshots(snapshotsResult.getDBClusterSnapshots())
+  def snapshots       = filterAndSortSnapshots(snapshotsResult.getDBClusterSnapshots(), prefix)
 
   println snapshots.toString()
 
