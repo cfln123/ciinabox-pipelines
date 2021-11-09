@@ -35,19 +35,20 @@ def getExpireDate(days) {
   return new Date().now().getTime() + (86400 * days)
 }
 
-// def filterAndSortSnapshots(snapshots) {
-//   def results = FluentIterable.from(snapshots).filter(new Predicate<DBClusterSnapshot>() {
-//     @Override
-//     public boolean apply(DBClusterSnapshot input) {
-//       return snapshot.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix)
-//     }
-//     }).toSortedList(new Comparator<DBClusterSnapshot>() {
-//       @Override
-//       public int compare(DBClusterSnapshot s1, DBClusterSnapshot s2) {
-//         return s1.getSnapshotCreateTime().compareTo(s2.getSnapshotCreateTime());
-//       }
-//     });
-// }
+def _sort(s1, s2) {
+  return s1.getSnapshotCreateTime().compareTo(s2.getSnapshotCreateTime())
+}
+
+def _filter(s) {
+  return s.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix)
+}
+
+def filterAndSortSnapshots(snapshots) {
+  return snapshots
+    .stream()
+    .sorted(_sort)
+    .filter(_filter)
+}
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
   def count = versions - snapshots.size()
@@ -120,7 +121,7 @@ def call(body) {
   */
 
   def snapshotsResult = client.describeDBClusterSnapshots()
-  def snapshots       = snapshotsResult.getDBClusterSnapshots()
+  def snapshots       = filterAndSortSnapshots(snapshotsResult.getDBClusterSnapshots())
 
   println snapshots.toString()
 
