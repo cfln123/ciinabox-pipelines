@@ -25,6 +25,7 @@ TODO:
 
 import java.util.Date
 import java.lang.Exception
+import java.util.stream.Collectors
 
 import com.amazonaws.services.rds.model.DBClusterSnapshot
 
@@ -45,7 +46,7 @@ def filterAndSortSnapshots(snapshots) {
   return snapshots.stream()
     .filter({ s -> s.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix) })
     .sorted({ s1, s2 -> s1.getSnapshotCreateTime().compareTo(s2.getSnapshotCreateTime()) })
-    .collect(toList())
+    .collect(Collectors.toList())
 }
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
