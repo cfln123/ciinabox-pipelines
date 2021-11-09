@@ -45,6 +45,7 @@ def filterAndSortSnapshots(snapshots) {
   return snapshots.stream()
     .filter { s -> s.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix) }
     .sorted { s1, s2 -> s1.getSnapshotCreateTime().compareTo(s2.getSnapshotCreateTime()) }
+    .collect Collectors.toList()
 }
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
