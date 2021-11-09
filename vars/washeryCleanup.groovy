@@ -11,15 +11,14 @@ washeryCleanup(
     role: 'role-name', // (required)
     prefix: 'washery-scrubbed', // (optional, snaphot name's prefix to filter)
     keepVersions: 5, // (conditional, required if keepDays is not set, keep last N snapshots)
-    keepDays: 7 // (optional, required if keepVersions is not set, keep snapshots from last N days)
+    keepDays: 7 // (conditional, required if keepVersions is not set, keep snapshots from last N days)
+    dryRun: true // (optional)
 )
 ************************************/
 
 /*
 
 TODO:
-  Add dry run feature
-  Fix getExpireDate function
   Do actual snapshot deletion
 
 */
@@ -30,11 +29,11 @@ import java.util.function
 
 import com.amazonaws.services.rds.model.DBClusterSnapshot
 
-//import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
+import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
 import com.base2.ciinabox.aws.AwsClientBuilder
 
 def getExpireDate(days) {
-  return new Date().now().getTime() + (86400 * days) // Arrumar
+  return new Date().now().getTime() + (86400 * days)
 }
 
 def filterAndSortSnapshots(snapshots) {
@@ -51,37 +50,46 @@ def filterAndSortSnapshots(snapshots) {
     });
 }
 
-def clearOlderSnapshots(snapshots, versions) {
-  def count = 0
+def clearOlderSnapshots(snapshots, versions, dryRun) {
+  def count = versions - snapshots.size()
 
-  for (def i = 0; i < versions; i++) {
+  if (count <= 0) {
+    println 'SKIPPED: Only ' + snapshots.size() + ' snapshots found, at least ' + (versions + 1) + ' is required.'
+    return
+  }
+
+  for (def i = 0; i < count; i++) {
     def snapshot = snapshots.get(i)
     println snapshot.toString()
     println 'Clearing snapshot: ' + snapshot.getDBClusterSnapshotArn()
 
-    count++
+    if (!dryRun) {
+      //delete
+    }
   }
-
-  return count
 }
 
-def clearExpiredSnapshots(snapshots, expireDate) {
-  def count = 0
+def clearExpiredSnapshots(snapshots, days, dryRun) {
+  def expireDate = getExpireDate(days)
 
   for (def i = 0; i < snapshots.size(); i++) {
     def snapshot = snapshots.get(i)
 
-    if (snapshot.getSnapshotCreateTime().getTime() > expireDate()) {
-      return count
+    if (snapshot.getSnapshotCreateTime().getTime() > expireDate) {
+      if (i == 0) {
+        println 'SKIPPED: No snapshots older than ' + days + ' days found.'
+      }
+
+      return
     }
 
     println snapshot.toString()
     println 'Clearing snapshot: ' + snapshot.getDBClusterSnapshotArn()
-    
-    count++
-  }
 
-  return count
+    if (!dryRun) {
+      //delete
+    }
+  }
 }
 
 def call(body) {
@@ -89,6 +97,7 @@ def call(body) {
   def prefix     = config.get('prefix', 'washery-scrubbed')
   def versions   = config.get('keepVersions', 0)
   def days       = config.get('keepDays', 0)
+  def dryRun     = config.get('dryRun', true)
 
   def clientBuilder = new AwsClientBuilder([
     region: config.region,
@@ -99,33 +108,27 @@ def call(body) {
   def client  = clientBuilder.rds()
 
   /* 
-    For unknown reasons (probably the version of the java-sdk since it couldnt find the codeartifact class is not implemented)
-    we cant manage to make the DescribeDBClusterSnapshotsRequest work to filter the snapshots by type, doing it manully for now
+  // Waiting for the aws-sdk for the aws-sdk to be updated to implement this bit
+
+  def request = new DescribeDBClusterSnapshotsRequest()
+    .withDBClusterIdentifier("carbon-dev-db-alaowgx15ood-dbcluster-1gwzozkft4ovq")
+    .withDBClusterIdentifier("")
+
+  request.setSnapshotType("manual")
+
+  def snapshotsResult = client.describeDBClusterSnapshots(request)
+
   */
 
-  //def request = new DescribeDBClusterSnapshotsRequest()
-    //.withDBClusterIdentifier("carbon-dev-db-alaowgx15ood-dbcluster-1gwzozkft4ovq")
-    //.withDBClusterIdentifier("")
-
-  //request.setSnapshotType("manual")
-
-  // def snapshotsResult = client.describeDBClusterSnapshots(request)
   def snapshotsResult = client.describeDBClusterSnapshots()
   def snapshots       = snapshotsResult.getDBClusterSnapshots()
-  def deletedCount    = 0
   
   if (versions > 0) {
-    deletedCount = versions - snapshots.size()
-    clearOlderSnapshots(snapshots, deletedCount)
+    clearOlderSnapshots(snapshots, versions, dryRun)
   } else if (days > 0) {
-    def expireDate = getExpireDate(days)
-    deletedCount   = clearExpiredSnapshots(snaphots, expireDate)
+    clearExpiredSnapshots(snaphots, days, dryRun)
   } else {
     throw new Exception('Either keepVersions or keepDays must be set, as a valid integer and greater than 0')
-  }
-
-  if (deletedCount == 0) {
-    println 'SKIPPED: Not enough version'
   }
 }
 
