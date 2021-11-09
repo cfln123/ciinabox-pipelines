@@ -45,7 +45,9 @@ def _filter(s) {
 def filterAndSortSnapshots(snapshots, prefix) {
   def filtered = snapshots
     .toSorted { s1, s2 -> s1.getSnapshotCreateTime().compareTo(s2.getSnapshotCreateTime()) }
+    .collect
     .findAll { s -> s.getSnapshotType() == 'manual' && s.getDBClusterSnapshotIdentifier().startsWith(prefix) }
+    .collect
   return filtered
     //
 }
