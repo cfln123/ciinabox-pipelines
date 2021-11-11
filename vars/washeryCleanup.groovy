@@ -35,26 +35,26 @@ import com.base2.ciinabox.aws.AwsClientBuilder
 def getExpireDate(days) {
   return new Date().now().getTime() + (86400 * days)
 }
-def _sort(s1, s2) {
-  return 
-}
 
-def _filter(s) {
-  return 
+class CustomComparator implements Comparator<DBClusterSnapshot> {
+  @Override
+  public int compare(DBClusterSnapshot s1, DBClusterSnapshot s2) {
+    return s1.getSnapshotCreateTime().getTime() - s1.getSnapshotCreateTime().getTime()
+  }
 }
 
 def filterAndSortSnapshots(snapshots, prefix) {
   def filtered = []
 
-  for (snapshot in snapshots) {
-    if (snapshot.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix)) {
-      filtered.add(snapshot)
+  for (s in snapshots) {
+    if (s.getSnapshotType() == 'manual' && s.getDBClusterSnapshotIdentifier().startsWith(prefix)) {
+      filtered.add(s)
     }
   }
 
-  return filtered
-    .sort({ s1, s2 -> s1.getSnapshotCreateTime().getTime() - s1.getSnapshotCreateTime().getTime() } as Comparator)
-}
+ Collections.sort(filtered, new CustomComparator())
+
+ return filtered
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
   def count = versions - snapshots.size()
