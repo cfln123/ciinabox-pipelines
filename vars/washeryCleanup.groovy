@@ -23,9 +23,8 @@ TODO:
   Implement aws-sdk native filter and sort functions once the plugin is updated
 */
 
-import java.util.Date
 import java.lang.Exception
-import java.util.stream.Collectors
+import java.util.Calendar
 
 import com.amazonaws.services.rds.model.DBClusterSnapshot
 
@@ -33,7 +32,9 @@ import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
 import com.base2.ciinabox.aws.AwsClientBuilder
 
 def getExpireDate(days) {
-  return new Date().getTime() - (days * 86400000 l)
+  Calendar cal = Calendar.getInstance();
+  cal.add(Calendar.DATE, -days);
+  return cal.getTime()
 }
 
 @NonCPS
