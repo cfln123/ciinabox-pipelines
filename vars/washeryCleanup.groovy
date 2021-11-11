@@ -39,7 +39,7 @@ def getExpireDate(days) {
 class CustomComparator implements Comparator<DBClusterSnapshot> {
   @Override
   public int compare(DBClusterSnapshot s1, DBClusterSnapshot s2) {
-    return s1.getSnapshotCreateTime().getTime() - s1.getSnapshotCreateTime().getTime()
+    return s1.getSnapshotCreateTime().getTime() - s2.getSnapshotCreateTime().getTime()
   }
 }
 
