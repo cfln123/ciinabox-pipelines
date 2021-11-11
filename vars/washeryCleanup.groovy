@@ -36,24 +36,11 @@ def getExpireDate(days) {
   return new Date().now().getTime() + (86400 * days)
 }
 
-class CustomComparator implements Comparator<DBClusterSnapshot> {
-  @Override
-  public int compare(DBClusterSnapshot s1, DBClusterSnapshot s2) {
-    return s2.getSnapshotCreateTime().getTime() - s1.getSnapshotCreateTime().getTime()
-  }
-}
-
 @NonCPS
 def filterAndSortSnapshots(snapshots, prefix) {
-  def filtered = []
-
-  for (s in snapshots) {
-    if (s.getSnapshotType() == 'manual' && s.getDBClusterSnapshotIdentifier().startsWith(prefix)) {
-      filtered << s
-    }
-  }
-
-  return filtered.sort { s1, s2 -> s2.getSnapshotCreateTime() <=> s1.getSnapshotCreateTime()  }
+  return snapshots
+    .findAll { it.getSnapshotType() == 'manual' && it.getDBClusterSnapshotIdentifier().startsWith(prefix) }
+    .sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime()  }
 }
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
