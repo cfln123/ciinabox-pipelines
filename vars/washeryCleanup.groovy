@@ -37,8 +37,6 @@ def getExpireDate(days) {
   return cal.getTime()
 }
 
-def _filterTags(snapshot, tags) 
-
 @NonCPS
 def filterAndSortSnapshots(snapshots, identifier, tags) {
   snapshots = snapshots
@@ -46,7 +44,7 @@ def filterAndSortSnapshots(snapshots, identifier, tags) {
         tags.each { k, v ->
           def found = false
 
-          for (tag in snapshot.getTagList()) {
+          for (tag in it.getTagList()) {
             if (tag.getName() == k && tag.getValue().matches(v)) {
               found = true
               break
