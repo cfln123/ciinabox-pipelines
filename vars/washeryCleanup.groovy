@@ -59,7 +59,7 @@ def filterAndSortSnapshots(snapshots, identifier, tags) {
         }
 
         return true
-      }
+      }(it)
     }
     .sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime()  }
 }
