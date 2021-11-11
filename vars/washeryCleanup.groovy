@@ -130,7 +130,7 @@ def call(body) {
       println 'Clearing snapshot: ' + id
 
       def deleteRequest = new DeleteDBClusterSnapshotRequest().withDBClusterSnapshotIdentifier(id)
-      client.deleteDBClusterSnapshot(request)
+      client.deleteDBClusterSnapshot(deleteRequest)
     }
   }
   
