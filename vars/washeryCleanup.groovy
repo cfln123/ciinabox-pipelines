@@ -33,9 +33,9 @@ import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
 import com.base2.ciinabox.aws.AwsClientBuilder
 
 def getExpireDate(days) {
-  def offset =  86400000 * days
+  def offset =  86400000 l * days
 
-  println (days)
+  println (offset)
 
   return new Date().getTime() - offset
 }
