@@ -39,7 +39,7 @@ def getExpireDate(days) {
 @NonCPS
 def filterAndSortSnapshots(snapshots, prefix) {
   return snapshots
-    .findAll { it.getSnapshotType() == 'manual' && it.getDBClusterSnapshotIdentifier().startsWith(prefix) }
+    .findAll { it.getSnapshotType() == 'manual' && it.getDBClusterSnapshotIdentifier().startsWith(prefix) && it.getDBClusterSnapshotIdentifier().endsWith('copy') }
     .sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime()  }
 }
 
@@ -129,9 +129,6 @@ def call(body) {
     for (id in identifiers) {
       println 'Clearing snapshot: ' + id
 
-      if (! id.endsWith('copy')) {
-        continue
-      }
       def deleteRequest = new DeleteDBClusterSnapshotRequest().withDBClusterSnapshotIdentifier(id)
       client.deleteDBClusterSnapshot(request)
     }
