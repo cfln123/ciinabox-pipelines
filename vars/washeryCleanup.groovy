@@ -43,10 +43,7 @@ class CustomComparator implements Comparator<DBClusterSnapshot> {
   }
 }
 
-def _sort(s1, s2) { 
-  return s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime() 
-}
-
+@NonCPS
 def filterAndSortSnapshots(snapshots, prefix) {
   def filtered = []
 
@@ -56,7 +53,7 @@ def filterAndSortSnapshots(snapshots, prefix) {
     }
   }
 
-  return filtered.sort(_sort)
+  return filtered.sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime()  }
 }
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
