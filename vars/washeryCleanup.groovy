@@ -103,15 +103,12 @@ def call(body) {
   // Waiting for the aws-sdk for the aws-sdk to be updated to implement this bit
 
   def request = new DescribeDBClusterSnapshotsRequest()
-    .withDBClusterIdentifier("carbon-dev-db-alaowgx15ood-dbcluster-1gwzozkft4ovq")
-    .withDBClusterIdentifier("")
-
   request.setSnapshotType("manual")
 
-  def snapshotsResult1 = client.describeDBClusterSnapshots(request)
+  def snapshotsResult = client.describeDBClusterSnapshots(request)
 
 
-  def snapshotsResult = client.describeDBClusterSnapshots()
+  //def snapshotsResult = client.describeDBClusterSnapshots()
   def snapshots       = filterAndSortSnapshots(snapshotsResult.getDBClusterSnapshots(), prefix)
   def identifiers     = []
   if (versions > 0) {
