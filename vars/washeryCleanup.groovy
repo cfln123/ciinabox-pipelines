@@ -48,7 +48,7 @@ def filterAndSortSnapshots(snapshots, identifier, tags) {
       for (t1 in tags) {
         def found = false
 
-        for (t2 in it.getTagList().iterator()) {
+        for (t2 in it.getTags()) {
           if (t1.key == t2.getName() && tag.getValue().matches(t2.value)) {
             found = true
             break
