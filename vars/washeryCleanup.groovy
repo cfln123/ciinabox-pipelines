@@ -89,7 +89,7 @@ def call(body) {
   def prefix     = config.get('prefix', 'washery-scrubbed')
   def versions   = config.get('keepVersions', 0)
   def days       = config.get('keepDays', 30)
-  def dryRun     = config.get('dryRun', false)
+  def dryRun     = config.get('dryRun', true)
 
   def clientBuilder = new AwsClientBuilder([
     region: config.region,
@@ -99,7 +99,7 @@ def call(body) {
 
   def client  = clientBuilder.rds()
 
-  /* 
+
   // Waiting for the aws-sdk for the aws-sdk to be updated to implement this bit
 
   def request = new DescribeDBClusterSnapshotsRequest()
@@ -108,9 +108,8 @@ def call(body) {
 
   request.setSnapshotType("manual")
 
-  def snapshotsResult = client.describeDBClusterSnapshots(request)
+  def snapshotsResult1 = client.describeDBClusterSnapshots(request)
 
-  */
 
   def snapshotsResult = client.describeDBClusterSnapshots()
   def snapshots       = filterAndSortSnapshots(snapshotsResult.getDBClusterSnapshots(), prefix)
