@@ -33,7 +33,7 @@ import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
 import com.base2.ciinabox.aws.AwsClientBuilder
 
 def getExpireDate(days) {
-  return new Date().getTime() - (86400000 * days)
+  return new Date().getTime().minusDays(days)
 }
 
 @NonCPS
@@ -68,12 +68,7 @@ def clearExpiredSnapshots(snapshots, days, dryRun) {
   for (def i = 0; i < snapshots.size(); i++) {
     def snapshot = snapshots.get(i)
 
-    println expireDate
-    println snapshot.getSnapshotCreateTime().getTime()
-    println new Date().getTime()
-    println -86400000 * days
-
-    if (expireDate < snapshot.getSnapshotCreateTime().getTime()) {
+    if (expireDate < snapshot.getSnapshotCreateTime()) {
       if (i == 0) {
         println 'SKIPPED: No snapshots older than ' + days + ' days found.'
       }
