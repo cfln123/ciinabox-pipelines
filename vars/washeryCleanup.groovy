@@ -8,7 +8,8 @@ washeryCleanup(
     region: 'ap-southeast-2', // (required)
     accountId: '00000000000', // (required)
     role: 'role-name', // (required)
-    prefix: 'washery-scrubbed', // (optional, snapshot name's prefix to filter)
+    identifier: '^washery-scrubbed.*$', // (optional, snapshot name's identifier to filter, supports regex)
+    tags: { 'washery:snapshotId': 'ˆ.*daily$' }, // (optional, snapshot's tags to filter, value supports regex)
     keepVersions: 5, // (conditional, required if keepDays is not set, keep last N snapshots)
     keepDays: 7 // (conditional, required if keepVersions is not set, keep snapshots from last N days)
     dryRun: true // (optional)
@@ -36,10 +37,29 @@ def getExpireDate(days) {
   return cal.getTime()
 }
 
+def _filterTags(snapshot, tags) {
+  tags.each { k, v ->
+    def found = false
+
+    for (tag in snapshot.getTagList()) {
+      if (tag.getName() == k && tag.getValue().matches(v)) {
+        found = true
+        break
+      }
+    }
+
+    if (!found) {
+      return false
+    }
+  }
+
+  return true
+}
+
 @NonCPS
-def filterAndSortSnapshots(snapshots, prefix) {
-  return snapshots
-    .findAll { it.getDBClusterSnapshotIdentifier().startsWith(prefix) }
+def filterAndSortSnapshots(snapshots, identifier, tags) {
+  snapshots = snapshots
+    .findAll { it.getDBClusterSnapshotIdentifier().matches(identifier) && _filterTags(it, tags) }
     .sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime()  }
 }
 
@@ -85,11 +105,14 @@ def getExpiredSnapshots(snapshots, days, dryRun) {
 }
 
 def call(body) {
-  def config     = body
-  def prefix     = config.get('prefix', 'copy-washery-scrubbed')
-  def versions   = config.get('keepVersions', 0)
-  def days       = config.get('keepDays', 30)
-  def dryRun     = config.get('dryRun', true)
+  def config      = body
+  def identifier  = config.get('identifier', '^copy-washery-scrubbed.*$')
+  def versions    = config.get('keepVersions', 0)
+  def days        = config.get('keepDays', 30)
+  def dryRun      = config.get('dryRun', true)
+  def tags        = config.get('tags', {
+    'washery:snapshotId': 'ˆ.*daily$'
+  })
 
   def clientBuilder = new AwsClientBuilder([
     region: config.region,
@@ -98,19 +121,14 @@ def call(body) {
   ])
 
   def client  = clientBuilder.rds()
-
-
-  // Waiting for the aws-sdk for the aws-sdk to be updated to implement this bit
-
   def request = new DescribeDBClusterSnapshotsRequest()
+
   request.setSnapshotType("manual")
 
   def snapshotsResult = client.describeDBClusterSnapshots(request)
-
-
-  //def snapshotsResult = client.describeDBClusterSnapshots()
-  def snapshots       = filterAndSortSnapshots(snapshotsResult.getDBClusterSnapshots(), prefix)
+  def snapshots       = filterAndSortSnapshots(snapshotsResult.getDBClusterSnapshots(), identifier, tags)
   def identifiers     = []
+
   if (versions > 0) {
     identifiers = getOlderSnapshots(snapshots, versions, dryRun)
   } else if (days > 0) {
