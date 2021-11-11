@@ -50,8 +50,6 @@ def filterAndSortSnapshots(snapshots, identifier, tags) {
       for (t1 in tags) {
         def found = false
 
-        print it.toString()
-
         for (t2 in it.getTagList()) {
           if (t1.key == t2.getName() && tag.getValue().matches(t2.value)) {
             found = true
@@ -112,10 +110,10 @@ def getExpiredSnapshots(snapshots, days, dryRun) {
 
 def call(body) {
   def config      = body
-  def identifier  = config.get('identifier', '^copy-washery-scrubbed.*$')
+  def identifier  = config.get('identifier', '^washery-scrubbed.*$')
   def versions    = config.get('keepVersions', 0)
   def days        = config.get('keepDays', 30)
-  def dryRun      = config.get('dryRun', false)
+  def dryRun      = config.get('dryRun', true)
   def tags        = config.get('tags', {
     washery:snapshotId: 'ˆ.*daily$'
   })
