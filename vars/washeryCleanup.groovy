@@ -44,11 +44,9 @@ def filterAndSortSnapshots(snapshots, identifier, tags) {
       if (!it.getDBClusterSnapshotIdentifier().matches(identifier)) {
         return false
       }
-      
-      it -> tags.each { k, v ->
-        def found = false
 
-        println k
+      tags.each { k, v ->
+        def found = false
 
         for (tag in it.getTagList()) {
           if (tag.getName() == k && tag.getValue().matches(v)) {
