@@ -33,7 +33,7 @@ import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
 import com.base2.ciinabox.aws.AwsClientBuilder
 
 def getExpireDate(days) {
-  return new Date().now().getTime() + (86400 * days)
+  return new Date().getTime() + (86400 * days)
 }
 
 @NonCPS
