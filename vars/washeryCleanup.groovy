@@ -89,7 +89,7 @@ def call(body) {
   def prefix     = config.get('prefix', 'washery-scrubbed')
   def versions   = config.get('keepVersions', 0)
   def days       = config.get('keepDays', 30)
-  def dryRun     = config.get('dryRun', true)
+  def dryRun     = config.get('dryRun', false)
 
   def clientBuilder = new AwsClientBuilder([
     region: config.region,
