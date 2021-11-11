@@ -53,7 +53,7 @@ def filterAndSortSnapshots(snapshots, prefix) {
   }
 
   return filtered
-    .sort { s1, s2 -> s1.getSnapshotCreateTime().getTime() - s1.getSnapshotCreateTime().getTime() }
+    .sort({ s1, s2 -> s1.getSnapshotCreateTime().getTime() - s1.getSnapshotCreateTime().getTime() })
 }
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
