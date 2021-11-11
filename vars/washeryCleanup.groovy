@@ -35,7 +35,7 @@ import com.base2.ciinabox.aws.AwsClientBuilder
 def getExpireDate(days) {
   def offset =  86400000 * days
 
-  println (-offset)
+  println (days)
 
   return new Date().getTime() - offset
 }
