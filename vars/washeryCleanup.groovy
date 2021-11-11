@@ -111,7 +111,7 @@ def call(body) {
   def days        = config.get('keepDays', 30)
   def dryRun      = config.get('dryRun', true)
   def tags        = config.get('tags', {
-    'washery:snapshotId': 'ˆ.*daily$'
+    washery:snapshotId: 'ˆ.*daily$'
   })
 
   def clientBuilder = new AwsClientBuilder([
