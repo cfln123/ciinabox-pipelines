@@ -55,6 +55,7 @@ def filterAndSortSnapshots(snapshots, prefix) {
  Collections.sort(filtered, new CustomComparator())
 
  return filtered
+}
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
   def count = versions - snapshots.size()
