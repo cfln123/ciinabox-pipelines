@@ -42,10 +42,18 @@ def _sort(s1, s2) {
 def _filter(s) {
   return 
 }
+
 def filterAndSortSnapshots(snapshots, prefix) {
-  snapshots
+  def filtered = []
+
+  for (snapshot in snapshots) {
+    if (snapshot.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix)) {
+      filtered.add(snapshots)
+    }
+  }
+
+  return filtered
     .sort { it.getSnapshotCreateTime().getTime() }
-    .findAll { true || (it.getSnapshotType() == 'manual' && it.getDBClusterSnapshotIdentifier().startsWith(prefix)) }
 }
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
