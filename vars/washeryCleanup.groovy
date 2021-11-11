@@ -88,8 +88,8 @@ def clearExpiredSnapshots(snapshots, days, dryRun) {
 def call(body) {
   def config     = body
   def prefix     = config.get('prefix', 'washery-scrubbed')
-  def versions   = config.get('keepVersions', 1)
-  def days       = config.get('keepDays', 0)
+  def versions   = config.get('keepVersions', 0)
+  def days       = config.get('keepDays', 20)
   def dryRun     = config.get('dryRun', true)
 
   def clientBuilder = new AwsClientBuilder([
