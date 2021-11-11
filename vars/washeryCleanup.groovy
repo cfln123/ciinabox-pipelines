@@ -48,7 +48,7 @@ def filterAndSortSnapshots(snapshots, prefix) {
 
   for (snapshot in snapshots) {
     if (snapshot.getSnapshotType() == 'manual' && snapshot.getDBClusterSnapshotIdentifier().startsWith(prefix)) {
-      filtered.add(snapshots)
+      filtered.add(snapshot)
     }
   }
 
