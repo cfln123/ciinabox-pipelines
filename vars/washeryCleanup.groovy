@@ -20,7 +20,7 @@ washeryCleanup(
 
 TODO:
   Do actual snapshot deletion
-
+  Implement aws-sdk native filter and sort functions once the plugin is updated
 */
 
 import java.util.Date
@@ -88,7 +88,7 @@ def clearExpiredSnapshots(snapshots, days, dryRun) {
 def call(body) {
   def config     = body
   def prefix     = config.get('prefix', 'washery-scrubbed')
-  def versions   = config.get('keepVersions', 0)
+  def versions   = config.get('keepVersions', 1)
   def days       = config.get('keepDays', 0)
   def dryRun     = config.get('dryRun', true)
 
@@ -115,10 +115,6 @@ def call(body) {
 
   def snapshotsResult = client.describeDBClusterSnapshots()
   def snapshots       = filterAndSortSnapshots(snapshotsResult.getDBClusterSnapshots(), prefix)
-
-  println snapshots.toString()
-
-  return
   
   if (versions > 0) {
     clearOlderSnapshots(snapshots, versions, dryRun)
