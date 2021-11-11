@@ -48,11 +48,11 @@ def filterAndSortSnapshots(snapshots, prefix) {
 
   for (s in snapshots) {
     if (s.getSnapshotType() == 'manual' && s.getDBClusterSnapshotIdentifier().startsWith(prefix)) {
-      filtered.add(s)
+      filtered << s
     }
   }
 
- return Collections.sort(filtered, new CustomComparator())
+ return filtered.sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime() }
 }
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
