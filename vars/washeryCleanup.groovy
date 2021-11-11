@@ -68,7 +68,7 @@ def clearExpiredSnapshots(snapshots, days, dryRun) {
   for (def i = 0; i < snapshots.size(); i++) {
     def snapshot = snapshots.get(i)
 
-    if (snapshot.getSnapshotCreateTime().getTime() > expireDate) {
+    if (snapshot.getSnapshotCreateTime().getTime() < expireDate) {
       if (i == 0) {
         println 'SKIPPED: No snapshots older than ' + days + ' days found.'
       }
