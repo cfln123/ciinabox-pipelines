@@ -68,10 +68,6 @@ def clearExpiredSnapshots(snapshots, days, dryRun) {
   for (def i = 0; i < snapshots.size(); i++) {
     def snapshot = snapshots.get(i)
 
-    println(snapshot.getSnapshotCreateTime().getTime())
-    println(new Date().getTime())
-    println(expireDate)
-
     if (expireDate < snapshot.getSnapshotCreateTime().getTime()) {
       if (i == 0) {
         println 'SKIPPED: No snapshots older than ' + days + ' days found.'
@@ -93,7 +89,7 @@ def call(body) {
   def config     = body
   def prefix     = config.get('prefix', 'washery-scrubbed')
   def versions   = config.get('keepVersions', 0)
-  def days       = config.get('keepDays', 5)
+  def days       = config.get('keepDays', 30)
   def dryRun     = config.get('dryRun', true)
 
   def clientBuilder = new AwsClientBuilder([
