@@ -37,6 +37,23 @@ def getExpireDate(days) {
   return cal.getTime()
 }
 
+// tags.each { k, v ->
+//         def found = false
+
+//         for (tag in it.getTagList()) {
+//           if (tag.getName() == k && tag.getValue().matches(v)) {
+//             found = true
+//             break
+//           }
+//         }
+
+//         if (!found) {
+//           return false
+//         }
+//       }
+
+//       return true
+
 @NonCPS
 def filterAndSortSnapshots(snapshots, identifier, tags) {
   snapshots = snapshots
@@ -44,22 +61,6 @@ def filterAndSortSnapshots(snapshots, identifier, tags) {
       if (!it.getDBClusterSnapshotIdentifier().matches(identifier)) {
         return false
       }
-
-      tags.each { k, v ->
-        def found = false
-
-        for (tag in it.getTagList()) {
-          if (tag.getName() == k && tag.getValue().matches(v)) {
-            found = true
-            break
-          }
-        }
-
-        if (!found) {
-          return false
-        }
-      }
-
       return true
     }
     .sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime()  }
