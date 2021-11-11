@@ -52,9 +52,7 @@ def filterAndSortSnapshots(snapshots, prefix) {
     }
   }
 
- Collections.sort(filtered, new CustomComparator())
-
- return filtered
+ return Collections.sort(filtered, new CustomComparator())
 }
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
