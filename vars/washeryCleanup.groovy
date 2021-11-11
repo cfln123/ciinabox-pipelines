@@ -39,7 +39,7 @@ def getExpireDate(days) {
 @NonCPS
 def filterAndSortSnapshots(snapshots, prefix) {
   return snapshots
-    .findAll { it.getSnapshotType() == 'manual' && it.getDBClusterSnapshotIdentifier().startsWith(prefix) && it.getDBClusterSnapshotIdentifier().endsWith('copy') }
+    .findAll { it.getDBClusterSnapshotIdentifier().startsWith(prefix) }
     .sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime()  }
 }
 
@@ -86,7 +86,7 @@ def getExpiredSnapshots(snapshots, days, dryRun) {
 
 def call(body) {
   def config     = body
-  def prefix     = config.get('prefix', 'washery-scrubbed')
+  def prefix     = config.get('prefix', 'copy-washery-scrubbed')
   def versions   = config.get('keepVersions', 0)
   def days       = config.get('keepDays', 30)
   def dryRun     = config.get('dryRun', true)
