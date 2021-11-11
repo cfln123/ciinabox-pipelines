@@ -8,7 +8,7 @@ washeryCleanup(
     region: 'ap-southeast-2', // (required)
     accountId: '00000000000', // (required)
     role: 'role-name', // (required)
-    prefix: 'washery-scrubbed', // (optional, snaphot name's prefix to filter)
+    prefix: 'washery-scrubbed', // (optional, snapshot name's prefix to filter)
     keepVersions: 5, // (conditional, required if keepDays is not set, keep last N snapshots)
     keepDays: 7 // (conditional, required if keepVersions is not set, keep snapshots from last N days)
     dryRun: true // (optional)
@@ -57,7 +57,7 @@ def getOlderSnapshots(snapshots, versions, dryRun) {
     println snapshot.toString()
     println 'Clearing snapshot: ' + snapshot.getDBClusterSnapshotArn()
 
-    identifiers << snaphot.getDBClusterSnapshotIdentifier()
+    identifiers << snapshot.getDBClusterSnapshotIdentifier()
   }
 
   return identifiers
@@ -78,7 +78,7 @@ def getExpiredSnapshots(snapshots, days, dryRun) {
       return identifiers
     }
 
-    identifiers << snaphot.getDBClusterSnapshotIdentifier()
+    identifiers << snapshot.getDBClusterSnapshotIdentifier()
   }
 
   return identifiers
