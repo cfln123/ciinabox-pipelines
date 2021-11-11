@@ -27,7 +27,7 @@ import java.util.Calendar
 import com.amazonaws.services.rds.model.DBClusterSnapshot
 
 import com.amazonaws.services.docdb.model.DescribeDBClusterSnapshotsRequest
-import com.amazonaws.services.docdb.model.DeleteDBClusterSnapshotsRequest
+import com.amazonaws.services.docdb.model.DeleteDBClusterSnapshotRequest 
 import com.base2.ciinabox.aws.AwsClientBuilder
 
 def getExpireDate(days) {
