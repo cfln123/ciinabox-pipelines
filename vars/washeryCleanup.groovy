@@ -40,26 +40,29 @@ def getExpireDate(days) {
 @NonCPS
 def filterAndSortSnapshots(snapshots, identifier, tags) {
   snapshots = snapshots
-    .findAll { it.getDBClusterSnapshotIdentifier().matches(identifier) && {
-        it -> tags.each { k, v ->
-          def found = false
+    .findAll { 
+      if (!it.getDBClusterSnapshotIdentifier().matches(identifier)) {
+        return false
+      }
+      
+      it -> tags.each { k, v ->
+        def found = false
 
-          println k
+        println k
 
-          for (tag in it.getTagList()) {
-            if (tag.getName() == k && tag.getValue().matches(v)) {
-              found = true
-              break
-            }
-          }
-
-          if (!found) {
-            return false
+        for (tag in it.getTagList()) {
+          if (tag.getName() == k && tag.getValue().matches(v)) {
+            found = true
+            break
           }
         }
 
-        return true
-      }(it)
+        if (!found) {
+          return false
+        }
+      }
+
+      return true
     }
     .sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime()  }
 }
