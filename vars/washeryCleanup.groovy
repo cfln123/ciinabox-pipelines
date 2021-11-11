@@ -3,7 +3,6 @@ package com.base2.ciinabox
 /************************************
 washery DSL
 
-
 example usage
 washeryCleanup(
     region: 'ap-southeast-2', // (required)
@@ -19,7 +18,6 @@ washeryCleanup(
 /*
 
 TODO:
-  Do actual snapshot deletion
   Implement aws-sdk native filter and sort functions once the plugin is updated
 */
 
@@ -44,8 +42,9 @@ def filterAndSortSnapshots(snapshots, prefix) {
     .sort { s1, s2 -> s1.getSnapshotCreateTime() <=> s2.getSnapshotCreateTime()  }
 }
 
-def clearOlderSnapshots(snapshots, versions, dryRun) {
-  def count = snapshots.size() - versions
+def getOlderSnapshots(snapshots, versions, dryRun) {
+  def count       = snapshots.size() - versions
+  def identifiers = []
 
   if (count <= 0) {
     println 'SKIPPED: Only ' + snapshots.size() + ' snapshots found, at least ' + (versions + 1) + ' is required.'
@@ -57,14 +56,15 @@ def clearOlderSnapshots(snapshots, versions, dryRun) {
     println snapshot.toString()
     println 'Clearing snapshot: ' + snapshot.getDBClusterSnapshotArn()
 
-    if (!dryRun) {
-      //delete
-    }
+    identifiers << snaphot.getDBClusterSnapshotIdentifier()
   }
+
+  return identifiers
 }
 
-def clearExpiredSnapshots(snapshots, days, dryRun) {
-  def expireDate = getExpireDate(days)
+def getExpiredSnapshots(snapshots, days, dryRun) {
+  def expireDate  = getExpireDate(days)
+  def identifiers = []
 
   for (def i = 0; i < snapshots.size(); i++) {
     def snapshot = snapshots.get(i)
@@ -74,23 +74,20 @@ def clearExpiredSnapshots(snapshots, days, dryRun) {
         println 'SKIPPED: No snapshots older than ' + days + ' days found.'
       }
 
-      return
+      return identifiers
     }
 
-    println snapshot.toString()
-    println 'Clearing snapshot: ' + snapshot.getDBClusterSnapshotArn()
-
-    if (!dryRun) {
-      //delete
-    }
+    identifiers << snaphot.getDBClusterSnapshotIdentifier()
   }
+
+  return identifiers
 }
 
 def call(body) {
   def config     = body
   def prefix     = config.get('prefix', 'washery-scrubbed')
   def versions   = config.get('keepVersions', 0)
-  def days       = config.get('keepDays', 30)
+  def days       = config.get('keepDays', 0)
   def dryRun     = config.get('dryRun', true)
 
   def clientBuilder = new AwsClientBuilder([
@@ -116,14 +113,29 @@ def call(body) {
 
   def snapshotsResult = client.describeDBClusterSnapshots()
   def snapshots       = filterAndSortSnapshots(snapshotsResult.getDBClusterSnapshots(), prefix)
-  
+  def identifiers     = []
   if (versions > 0) {
-    clearOlderSnapshots(snapshots, versions, dryRun)
+    identifiers = getOlderSnapshots(snapshots, versions, dryRun)
   } else if (days > 0) {
-    clearExpiredSnapshots(snapshots, days, dryRun)
+    identifiers = getExpiredSnapshots(snapshots, days, dryRun)
   } else {
     throw new Exception('Either keepVersions or keepDays must be set, as a valid integer and greater than 0')
   }
+
+  if (dryRun) {
+    println 'SKIPPED: Dry run. Snaphots: ' + identifiers.toString() 
+  } else {
+    for (id in identifiers) {
+      println 'Clearing snapshot: ' + id
+
+      if (! id.endsWith('copy')) {
+        continue
+      }
+      def deleteRequest = new DeleteDBClusterSnapshotRequest().withDBClusterSnapshotIdentifier(id)
+      client.deleteDBClusterSnapshot(request)
+    }
+  }
+  
 }
 
 // #!/usr/bin/env python3
