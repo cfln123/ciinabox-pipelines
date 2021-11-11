@@ -41,8 +41,10 @@ def getExpireDate(days) {
 def filterAndSortSnapshots(snapshots, identifier, tags) {
   snapshots = snapshots
     .findAll { it.getDBClusterSnapshotIdentifier().matches(identifier) && {
-        tags.each { k, v ->
+        it -> tags.each { k, v ->
           def found = false
+
+          println k
 
           for (tag in it.getTagList()) {
             if (tag.getName() == k && tag.getValue().matches(v)) {
