@@ -70,6 +70,7 @@ def clearExpiredSnapshots(snapshots, days, dryRun) {
 
     println expireDate
     println snapshot.getSnapshotCreateTime().getTime()
+    println new Date().getTime()
 
     if (expireDate < snapshot.getSnapshotCreateTime().getTime()) {
       if (i == 0) {
