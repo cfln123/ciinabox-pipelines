@@ -19,7 +19,7 @@ washeryCleanup(
 /*
 
 TODO:
-  Implement aws-sdk native filter and sort functions once the plugin is updated
+  Enable filter tags functions once the aws-sdk plugin is updated
 */
 
 import java.lang.Exception
@@ -44,13 +44,15 @@ def filterAndSortSnapshots(snapshots, identifier, tags) {
       if (!it.getDBClusterSnapshotIdentifier().matches(identifier)) {
         return false
       }
+
+      return true // Remove once plugin's update is done
       
       for (t1 in tags) {
         def found = false
 
         print it.toString()
 
-        for (t2 in it.getTags()) {
+        for (t2 in it.getTagList()) {
           if (t1.key == t2.getName() && tag.getValue().matches(t2.value)) {
             found = true
             break
@@ -150,26 +152,5 @@ def call(body) {
       def deleteRequest = new DeleteDBClusterSnapshotRequest().withDBClusterSnapshotIdentifier(id)
       client.deleteDBClusterSnapshot(deleteRequest)
     }
-  }
-  
+  } 
 }
-
-// #!/usr/bin/env python3
-
-// import json
-// import boto3
-// from datetime import datetime, timedelta, timezone
-// retentionDate = datetime.now(timezone.utc) - timedelta(days=7)
-// print("Connecting to RDS")
-// client = boto3.client('rds', region_name='us-west-2')
-// rdssnapshots = client.describe_db_cluster_snapshots(
-//     DBClusterSnapshotIdentifier='',
-//     SnapshotType='manual',
-// )
-
-// print('Deleting all DB Washery Snapshots older than %s' % retentionDate)
-
-// for snapshot in rdssnapshots['DBClusterSnapshots']:
-//     if snapshot['DBClusterSnapshotIdentifier'].startswith('washery-scrubbed') and snapshot['SnapshotCreateTime'] < retentionDate:
-//         print(snapshot["DBClusterSnapshotIdentifier"])
-//         client.delete_db_cluster_snapshot(DBClusterSnapshotIdentifier=snapshot["DBClusterSnapshotIdentifier"])
