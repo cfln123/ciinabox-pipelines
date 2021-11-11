@@ -44,12 +44,9 @@ def filterAndSortSnapshots(snapshots, prefix) {
 }
 
 def clearOlderSnapshots(snapshots, versions, dryRun) {
-  def count = versions - snapshots.size()
+  def count = snapshots.size() - versions
 
   if (count <= 0) {
-    println count
-    println versions
-    println snapshots.size()
     println 'SKIPPED: Only ' + snapshots.size() + ' snapshots found, at least ' + (versions + 1) + ' is required.'
     return
   }
