@@ -112,7 +112,7 @@ def getExpiredSnapshots(snapshots, days, dryRun) {
 
 def call(body) {
   def config      = body
-  def identifier  = config.get('identifier', '^washery-scrubbed.*$')
+  def identifier  = config.get('identifier', '^copy-washery-scrubbed.*$')
   def versions    = config.get('keepVersions', 0)
   def days        = config.get('keepDays', 30)
   def dryRun      = config.get('dryRun', true)
