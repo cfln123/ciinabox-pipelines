@@ -40,7 +40,7 @@ def getExpireDate(days) {
 @NonCPS
 def filterAndSortSnapshots(snapshots, identifier, tags) {
   snapshots = snapshots
-    .findAll { 
+    .findAll { it ->
       if (!it.getDBClusterSnapshotIdentifier().matches(identifier)) {
         return false
       }
