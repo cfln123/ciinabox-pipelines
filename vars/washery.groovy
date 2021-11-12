@@ -75,16 +75,12 @@ def call(body) {
         for (tag in config.tags) {
             tags << [ Key: tag.key, Value: tag.value ]
         }
-        def tags_json = JsonOutput.toJson(tags).replace('"', '\\\\"')
+        def tags_json = JsonOutput.toJson(tags).replace('"', '\\"')
         opts = "${opts} -t '${tags_json}'"
 
     }
         
     def command = "cd /opt/washery && ./main.sh ${opts}"
-
-    sh(script: "echo ${opts}", label: 'washery')
-    
-    return
 
     if (s3cmd) {
         echo("copying the sql script to s3 bucket ${config.scriptBucket}")
