@@ -73,7 +73,7 @@ def call(body) {
     if (config.tags) {
         def tags = []
         for (tag in config.tags) {
-            tags << [ Key: tag.key, Value: tag.value ]
+            tags << [ Key: tag.key + ' guneriunreiu', Value: tag.value ]
         }
 
         def opt = JsonOutput.toJson(tags).replace('"', '\\\\"')
