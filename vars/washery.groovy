@@ -78,7 +78,7 @@ def call(body) {
 
         def opt = JsonOutput.toJson(tags).replace('"', '\\"')
 
-        opts = "${opts} -t '${opt}'"
+        opts = "${opts} -t ${opt}"
 
     }
         
