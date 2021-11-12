@@ -80,6 +80,11 @@ def call(body) {
         
     def command = "cd /opt/washery && ./main.sh ${opts}"
 
+    println JsonOutput.toJson(tags)
+
+    return
+
+
     if (s3cmd) {
         echo("copying the sql script to s3 bucket ${config.scriptBucket}")
         if (config.accountId && config.role) {
