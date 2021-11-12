@@ -75,7 +75,12 @@ def call(body) {
         for (tag in config.tags) {
             tags << [ Key: tag.key, Value: tag.value ]
         }
-        opts = "${opts} -t \\\"${JsonOutput.toJson(tags)}\\\""
+
+        def opt = JsonOutput.toJson(tags).replace('"', '\\"')
+
+        println opt
+
+        opts = "${opts} -t \\\"${opt}\\\""
 
     }
         
