@@ -72,13 +72,17 @@ def call(body) {
 
     if (config.tags) {
         def tags = []
-        for (tag in tags) {
+        for (tag in config.tags) {
             tags << [ Key: tag.key, Value: tag.value ]
         }
         opts = "${opts} -t \"${JsonOutput.toJson(tags)}\""
     }
         
     def command = "cd /opt/washery && ./main.sh ${opts}"
+
+    println command
+
+    return
 
     if (s3cmd) {
         echo("copying the sql script to s3 bucket ${config.scriptBucket}")
