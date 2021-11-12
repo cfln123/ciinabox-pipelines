@@ -81,7 +81,7 @@ def call(body) {
         
     def command = "cd /opt/washery && ./main.sh ${opts}"
 
-    sh(script: "cho ${opts}", label: 'washery')
+    sh(script: "echo ${opts}", label: 'washery')
     
     return
 
