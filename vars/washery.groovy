@@ -76,9 +76,9 @@ def call(body) {
             tags << [ Key: tag.key, Value: tag.value ]
         }
 
-        def opt = JsonOutput.toJson(tags).replace('"', '\\\\\"')
+        def opt = JsonOutput.toJson(tags).replace('"', '\\\\"')
 
-        opts = "${opts} -t \\\"${opt}\\\""
+        opts = "${opts} -t '${opt}'"
 
     }
         
