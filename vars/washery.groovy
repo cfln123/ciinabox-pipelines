@@ -77,15 +77,9 @@ def call(body) {
         }
         opts = "${opts} -t \"${JsonOutput.toJson(tags)}\""
 
-        println JsonOutput.toJson(tags)
     }
         
     def command = "cd /opt/washery && ./main.sh ${opts}"
-
-    println command
-
-    return
-
 
     if (s3cmd) {
         echo("copying the sql script to s3 bucket ${config.scriptBucket}")
