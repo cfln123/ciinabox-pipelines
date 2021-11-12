@@ -23,6 +23,8 @@ washery(
 )
 ************************************/
 
+import groovy.json.JsonOutput
+
 def call(body) {
     def config = body
 
