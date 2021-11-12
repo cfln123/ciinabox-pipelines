@@ -76,11 +76,13 @@ def call(body) {
             tags << [ Key: tag.key, Value: tag.value ]
         }
         opts = "${opts} -t \"${JsonOutput.toJson(tags)}\""
+
+        println JsonOutput.toJson(tags)
     }
         
     def command = "cd /opt/washery && ./main.sh ${opts}"
 
-    println JsonOutput.toJson(tags)
+    println command
 
     return
 
