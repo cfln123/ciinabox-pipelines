@@ -28,6 +28,8 @@ import groovy.json.JsonOutput
 def call(body) {
     def config = body
 
+    config.snapshotId = 'washery-test' //remove
+
     config.saveSnapshot = config.get('saveSnapshot', true)
     def timestamp = new Date().getTime()
 
@@ -77,7 +79,6 @@ def call(body) {
         }
         def tags_json = JsonOutput.toJson(tags).replace('"', '\\"')
         opts = """${opts} -t "${tags_json}" """
-
     }
         
     def command = "cd /opt/washery && ./main.sh ${opts}"
