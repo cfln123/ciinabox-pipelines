@@ -72,7 +72,9 @@ def call(body) {
 
     if (config.tags) {
         def tags = []
-        config.tags.each { k, v -> tags << [ Key: k, Value: v ] }
+        for (tag in tags) {
+            tags << { Key: tag.key, Value: tag.value }
+        }
         opts = "${opts} -t \"${JsonOutput.toJson(tags)}\""
     }
         
