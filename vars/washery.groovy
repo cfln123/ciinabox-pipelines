@@ -80,7 +80,7 @@ def call(body) {
 
         println opt
 
-        println opt.replace('"', '\\"')
+        println opt.replace('"', '\\\\"')
 
         opts = "${opts} -t \\\"${opt}\\\""
 
