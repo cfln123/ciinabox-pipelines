@@ -19,7 +19,7 @@ washery(
     saveSnapshot: true|false, // (optional, defaults to true. Determines if a snapshot is taken of the scrubbed database)
     containerImage: 'ghcr.io/base2services/washery:v2', // (optional, the docker image to run in fargate, defaults to ghcr.io/base2services/washery:v2)
     databases: ['mydb', 'anotherdb'] // (optional list of databases to dump, defaults to all databases)
-    tags: { key1: value1, key2:value2 } // (optional custom tags to be added to the snapshot)
+    tags: [ key1: value1, key2:value2 ] // (optional custom tags to be added to the snapshot)
 )
 ************************************/
 
@@ -79,10 +79,6 @@ def call(body) {
     }
         
     def command = "cd /opt/washery && ./main.sh ${opts}"
-
-    println command
-
-    return
 
     if (s3cmd) {
         echo("copying the sql script to s3 bucket ${config.scriptBucket}")
