@@ -29,7 +29,7 @@ def call(body) {
     def config = body
 
     config.snapshotId = 'washery-test'
-    config.dumpBucket: 'washery-210392722447-us-west-2.base2tools'
+    config.dumpBucket = 'washery-210392722447-us-west-2.base2tools'
 
     config.saveSnapshot = config.get('saveSnapshot', true)
     def timestamp = new Date().getTime()
