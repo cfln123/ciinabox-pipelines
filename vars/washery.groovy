@@ -19,8 +19,11 @@ washery(
     saveSnapshot: true|false, // (optional, defaults to true. Determines if a snapshot is taken of the scrubbed database)
     containerImage: 'ghcr.io/base2services/washery:v2', // (optional, the docker image to run in fargate, defaults to ghcr.io/base2services/washery:v2)
     databases: ['mydb', 'anotherdb'] // (optional list of databases to dump, defaults to all databases)
+    tags: [ key1: value1, key2:value2 ] // (optional custom tags to be added to the snapshot)
 )
 ************************************/
+
+import groovy.json.JsonOutput
 
 def call(body) {
     def config = body
@@ -65,6 +68,15 @@ def call(body) {
 
     if (config.containerImage) {
         opts = "${opts} -c ${config.containerImage}"
+    }
+
+    if (config.tags) {
+        def tags = []
+        for (tag in config.tags) {
+            tags << [ Key: tag.key, Value: tag.value ]
+        }
+        def tags_json = JsonOutput.toJson(tags).replace('"', '\\"')
+        opts = """${opts} -t "${tags_json}" """
     }
         
     def command = "cd /opt/washery && ./main.sh ${opts}"
