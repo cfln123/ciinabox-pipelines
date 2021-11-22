@@ -1,3 +1,6 @@
+import com.base2.ciinabox.aws.IntrinsicsYamlConstructor
+import org.yaml.snakeyaml.Yaml
+
 def call(body) {
   def config    = body
   def types     = config.get('serviceTypes', false)
