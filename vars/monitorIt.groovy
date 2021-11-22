@@ -22,5 +22,10 @@ def call(body) {
   }
 
   println '*** Services: ***'
-  println resources
+  
+  for (group in resources) {
+    for (resource in group) {
+      println resource
+    }
+  }
 }
