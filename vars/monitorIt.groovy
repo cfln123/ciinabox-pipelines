@@ -7,7 +7,7 @@ def call(body) {
   withAWS(region: config.region, role: config.role, roleAccount: config.accountId, duration: duration, roleSessionName: 'monitorIt') {
     sh(script: 'git clone https://github.com/base2Services/monitorable.git', label: 'monitorIt')
     dir('./monitorable') {
-      resources = sh(script: "./monitorable.py --format cfn-guardian --regions $config.region | sed '1,/^### cfn-guardian config ###$/d'", label: 'monitorIt')
+      resources = sh(script: "./monitorable.py --format cfn-guardian --regions $config.region", label: 'monitorIt')
     }
   }
 
