@@ -7,7 +7,7 @@ def call(body) {
   withAWS(region: config.region, role: config.role, roleAccount: config.accountId, duration: duration, roleSessionName: 'monitorIt') {
     agent {
       docker {
-          image ‘theonestack/cfhighlander:0.12.6’
+          image ‘cfln123/monitorable’
           args '-v ~/.aws:/root/.aws -e AWS_DEFAULT_PROFILE=reference-dev -t'
           reuseNode true
       }
