@@ -15,6 +15,7 @@ def call(body) {
 def getMonitorableResources(config) {
   def duration  = config.get('sessionDuration', 900)
   def template  = ''
+  def resources = []
 
   if(!fileExists('./monitorable')) {
     sh(script: 'rm -rf monitorable && git clone https://github.com/cfln123/monitorable.git', label: 'monitorIt')
