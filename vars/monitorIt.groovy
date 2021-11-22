@@ -10,7 +10,7 @@ def call(body) {
   withAWS(region: config.region, role: config.role, roleAccount: config.accountId, duration: duration, roleSessionName: 'monitorIt') {
     if(!fileExists('./monitorable')) {
       sh(script: 'rm -rf monitorable && git clone https://github.com/cfln123/monitorable.git', label: 'monitorIt')
-      sh(script: "python3 -m pip install --user -r ./monitorable/requirements.txt", label: 'monitorIt')
+      sh(script: 'python3 -m pip install --user -r ./monitorable/requirements.txt', label: 'monitorIt')
     }
     
     dir('./monitorable') { 
