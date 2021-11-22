@@ -14,5 +14,5 @@ def call(body) {
   }
 
   println '*** Services: ***'
-  println resources.split("-");
+  println resources
 }
