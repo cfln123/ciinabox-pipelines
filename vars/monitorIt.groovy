@@ -17,7 +17,7 @@ def call(body) {
       def monitorable = sh(script: "./monitorable.py --format cfn-guardian --regions $config.region", label: 'monitorIt', returnStdout: true)
       
       Yaml yaml = new Yaml(new IntrinsicsYamlConstructor())
-      resources = yaml.load(monitorable.split('### cfn-guardian config ###')[1])
+      resources = yaml.load(monitorable.split('### cfn-guardian config ###')[1]).Resources
     }
   }
 
