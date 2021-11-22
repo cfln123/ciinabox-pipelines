@@ -24,7 +24,7 @@ def call(body) {
   println '*** Services: ***'
   
   resources.each { k, group ->
-    group.each { l, resource -> 
+    group.each { resource -> 
       println resource
     }
   }
