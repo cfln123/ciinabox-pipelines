@@ -24,8 +24,8 @@ def call(body) {
 
   println '*** Services: ***'
   
-  template.each { k, group ->
-    group.each { resource -> 
+  template.each { group, _resources ->
+    _resources.each { resource -> 
       resources << [ Id: resource.Id, group: group ]
     }
   }
