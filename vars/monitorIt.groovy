@@ -2,12 +2,22 @@ import com.base2.ciinabox.aws.IntrinsicsYamlConstructor
 import org.yaml.snakeyaml.Yaml
 
 def call(body) {
-  def config    = body
-  def types     = config.get('serviceTypes', false)
-  def duration  = config.get('sessionDuration', 900)
-  def resources = []
-  def template  = ''
+  def config      = body
   
+  def monitorable = getMonitorable(config)
+
+  println '*** Services: ***'
+  println monitorable
+}
+
+// getMonitoredResources
+
+// getProvisionedResources
+
+def getMonitorableResources(config) {
+  def duration  = config.get('sessionDuration', 900)
+  def template  = ''
+
   if(!fileExists('./monitorable')) {
     sh(script: 'rm -rf monitorable && git clone https://github.com/cfln123/monitorable.git', label: 'monitorIt')
     sh(script: 'python3 -m pip install --user -r ./monitorable/requirements.txt', label: 'monitorIt')
@@ -22,13 +32,11 @@ def call(body) {
     }
   }
 
-  println '*** Services: ***'
-  
   template.each { group, _resources ->
     _resources.each { resource -> 
       resources << [ Id: resource.Id, group: group ]
     }
   }
 
-  println resources
+  return resources
 }
