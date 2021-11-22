@@ -4,15 +4,13 @@ import org.yaml.snakeyaml.Yaml
 def call(body) {
   def config      = body
   
-  def monitorable = getMonitorable(config)
+  def monitorable = getMonitorableResources(config)
 
   println '*** Services: ***'
   println monitorable
 }
 
-// getMonitoredResources
-
-// getProvisionedResources
+// getMonitoredResources: List resources already monitored by guardian
 
 def getMonitorableResources(config) {
   def duration  = config.get('sessionDuration', 900)
