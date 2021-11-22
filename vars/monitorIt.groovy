@@ -10,7 +10,11 @@ def call(body) {
   println monitorable
 }
 
-// getMonitoredResources: List resources already monitored by guardian
+// getMonitoredResources(config): List resources already monitored by guardian
+
+// getStackResources(config): List resources from suppiled stack
+
+// mergeResources(provisioned, monitorable, monitored): Filter monitorable resources from provisioned and add (if not exists) into monitored
 
 def getMonitorableResources(config) {
   def duration  = config.get('sessionDuration', 900)
