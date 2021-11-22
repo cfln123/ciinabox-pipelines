@@ -23,8 +23,8 @@ def call(body) {
 
   println '*** Services: ***'
   
-  for (group in resources) {
-    for (resource in group) {
+  resources.each { k, group ->
+    group.each { l, resource -> 
       println resource
     }
   }
