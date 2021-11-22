@@ -5,13 +5,7 @@ def call(body) {
   def resources = ''
   
   withAWS(region: config.region, role: config.role, roleAccount: config.accountId, duration: duration, roleSessionName: 'monitorIt') {
-    agent {
-      docker {
-          image ‘cfln123/monitorable’
-          args '-v ~/.aws:/root/.aws -e AWS_DEFAULT_PROFILE=reference-dev -t'
-          reuseNode true
-      }
-    }
+    
     // sh(script: 'rm -rf monitorable && git clone https://github.com/base2Services/monitorable.git', label: 'monitorIt')
     // dir('./monitorable') {
     //   sh(script: "python3 -m pip install -r requirements.txt", label: 'monitorIt')
