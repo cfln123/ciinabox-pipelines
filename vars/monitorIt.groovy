@@ -5,7 +5,8 @@ def call(body) {
   def config    = body
   def types     = config.get('serviceTypes', false)
   def duration  = config.get('sessionDuration', 900)
-  def resources = ''
+  def resources = []
+  def template  = ''
   
   if(!fileExists('./monitorable')) {
     sh(script: 'rm -rf monitorable && git clone https://github.com/cfln123/monitorable.git', label: 'monitorIt')
@@ -17,15 +18,17 @@ def call(body) {
       def monitorable = sh(script: "./monitorable.py --format cfn-guardian --regions $config.region", label: 'monitorIt', returnStdout: true)
       
       Yaml yaml = new Yaml(new IntrinsicsYamlConstructor())
-      resources = yaml.load(monitorable.split('### cfn-guardian config ###')[1]).Resources
+      template = yaml.load(monitorable.split('### cfn-guardian config ###')[1]).Resources
     }
   }
 
   println '*** Services: ***'
   
-  resources.each { k, group ->
+  template.each { k, group ->
     group.each { resource -> 
-      println resource
+      resources << [ Id: resource.Id, group: group ]
     }
   }
+
+  println resources
 }
