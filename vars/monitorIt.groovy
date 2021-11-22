@@ -1,5 +1,3 @@
-import groovy.yaml.YamlSlurper
-
 def call(body) {
   def config    = body
   def types     = config.get('serviceTypes', false)
@@ -10,9 +8,11 @@ def call(body) {
     sh(script: 'rm -rf monitorable && git clone https://github.com/cfln123/monitorable.git', label: 'monitorIt')
     dir('./monitorable') {
       sh(script: "sudo python3 -m pip install -r requirements.txt", label: 'monitorIt')
+      
       def monitorable = sh(script: "./monitorable.py --format cfn-guardian --regions $config.region", label: 'monitorIt', returnStdout: true)
       
-      resources = new YamlSlurper().parse(monitorable.split('### cfn-guardian config ###')[1])
+      Yaml yaml = new Yaml(new IntrinsicsYamlConstructor())
+      resources = yaml.load(monitorable.split('### cfn-guardian config ###')[1])
     }
   }
 
