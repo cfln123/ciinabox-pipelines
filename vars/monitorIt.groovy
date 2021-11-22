@@ -7,12 +7,12 @@ def call(body) {
   def duration  = config.get('sessionDuration', 900)
   def resources = ''
   
-  withAWS(region: config.region, role: config.role, roleAccount: config.accountId, duration: duration, roleSessionName: 'monitorIt') {
-    if(!fileExists('./monitorable')) {
-      sh(script: 'rm -rf monitorable && git clone https://github.com/cfln123/monitorable.git', label: 'monitorIt')
-      sh(script: 'python3 -m pip install --user -r ./monitorable/requirements.txt', label: 'monitorIt')
-    }
-    
+  if(!fileExists('./monitorable')) {
+    sh(script: 'rm -rf monitorable && git clone https://github.com/cfln123/monitorable.git', label: 'monitorIt')
+    sh(script: 'python3 -m pip install --user -r ./monitorable/requirements.txt', label: 'monitorIt')
+  }
+
+  withAWS(region: config.region, role: config.role, roleAccount: config.accountId, duration: duration, roleSessionName: 'monitorIt') {  
     dir('./monitorable') { 
       def monitorable = sh(script: "./monitorable.py --format cfn-guardian --regions $config.region", label: 'monitorIt', returnStdout: true)
       
