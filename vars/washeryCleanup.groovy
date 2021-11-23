@@ -72,9 +72,6 @@ def getOlderSnapshots(snapshots, versions, dryRun) {
 
   for (def i = 0; i < count; i++) {
     def snapshot = snapshots.get(i)
-    println snapshot.toString()
-    println 'Clearing snapshot: ' + snapshot.getDBClusterSnapshotArn()
-
     identifiers << snapshot.getDBClusterSnapshotIdentifier()
   }
 
