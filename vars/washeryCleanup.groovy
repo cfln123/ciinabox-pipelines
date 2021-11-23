@@ -39,22 +39,20 @@ def filterAndSortSnapshots(snapshots, identifier, tags) {
         return false
       }
 
-      if (!tags) {
-        return true
-      }
-      
-      for (t1 in tags) {
-        def found = false
+      if (tags) { 
+        for (t1 in tags) {
+          def found = false
 
-        for (t2 in it.getTagList()) {
-          if (t1.key == t2.getName() && tag.getValue().matches(t2.value)) {
-            found = true
-            break
+          for (t2 in it.getTagList()) {
+            if (t1.key == t2.getName() && tag.getValue().matches(t2.value)) {
+              found = true
+              break
+            }
           }
-        }
 
-        if (!found) {
-          return false
+          if (!found) {
+            return false
+          }
         }
       }
 
