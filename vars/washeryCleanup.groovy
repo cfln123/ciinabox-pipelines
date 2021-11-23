@@ -16,12 +16,6 @@ washeryCleanup(
 )
 ************************************/
 
-/*
-
-TODO:
-  Enable filter tags functions once the aws-sdk plugin is updated
-*/
-
 import java.lang.Exception
 import java.util.Calendar
 
