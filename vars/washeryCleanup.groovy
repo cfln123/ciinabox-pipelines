@@ -45,7 +45,9 @@ def filterAndSortSnapshots(snapshots, identifier, tags) {
         return false
       }
 
-      return true // Remove once plugin's update is done
+      if (!tags) {
+        return true
+      }
       
       for (t1 in tags) {
         def found = false
@@ -114,9 +116,7 @@ def call(body) {
   def versions    = config.get('keepVersions', 0)
   def days        = config.get('keepDays', 30)
   def dryRun      = config.get('dryRun', true)
-  def tags        = config.get('tags', {
-    washery:snapshotId: 'ˆ.*daily$'
-  })
+  def tags        = config.get('tags', false)
 
   def clientBuilder = new AwsClientBuilder([
     region: config.region,
