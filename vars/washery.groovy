@@ -38,7 +38,8 @@ def call(body) {
     def s3cmd = ""
     def opts = ""
     opts = "${opts} -s ${config.snapshotId}"
-    opts = "${opts} -i ${config.instanceType}"    
+    opts = "${opts} -i ${config.instanceType}"
+    opts = "${opts} -u washery-1639394965-34"    
     
     if (config.sqlScript && config.scriptBucket) {
         s3cmd = "aws s3 cp ${config.sqlScript} s3://${config.scriptBucket}/washery/script/${config.sqlScript} --region ${config.region}"
