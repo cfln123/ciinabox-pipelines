@@ -133,21 +133,21 @@ class AwsClientBuilder implements Serializable {
     return cb.build()
   }
 
-  def codeartifact() {
-    def cb = new AWSCodeArtifactClientBuilder().standard()
-      .withClientConfiguration(config())
+  // def codeartifact() {
+    // def cb = new AWSCodeArtifactClientBuilder().standard()
+      // .withClientConfiguration(config())
 
-    if (region) {
-      cb.withRegion(region)
-    }
+    // if (region) {
+      // cb.withRegion(region)
+    // }
 
-    def creds = getCredentials()
-    if(creds != null) {
-      cb.withCredentials(new AWSStaticCredentialsProvider(creds))
-    }
+    // def creds = getCredentials()
+    // if(creds != null) {
+      // cb.withCredentials(new AWSStaticCredentialsProvider(creds))
+    // }
 
-    return cb.build()
-  }
+    // return cb.build()
+  // }
   
 
   private def config() {
