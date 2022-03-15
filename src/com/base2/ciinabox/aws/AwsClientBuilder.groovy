@@ -17,7 +17,7 @@ import com.amazonaws.services.ec2.AmazonEC2ClientBuilder
 import com.amazonaws.services.ecs.AmazonECSClientBuilder
 import com.amazonaws.services.redshift.AmazonRedshiftClientBuilder
 import com.amazonaws.services.rds.AmazonRDSClientBuilder
-import com.amazonaws.services.codeartifact.AWSCodeArtifactClientBuilder
+//import com.amazonaws.services.codeartifact.AWSCodeArtifactClientBuilder
 
 class AwsClientBuilder implements Serializable {
   
